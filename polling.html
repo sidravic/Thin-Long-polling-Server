@@ -1,0 +1,50 @@
+<html>
+	<head>
+		<title> Long Poll </title>
+		<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></script>
+	</head>
+	<body>
+		<center> <h2> Polling </h2> <center>
+
+		<script>
+		 $(document).ready(function(e){
+		 	
+
+
+		 	function jsoncallback(data){
+		 		console.log(JSON.parse(data));
+		 	};
+
+		 	var doPoll = function(callback){
+		 		console.log('poll called')
+		 		window.setTimeout(callback, 3000);
+		 	};
+
+		 	var cb = function(){
+		 		console.log('in here');
+		 		$.ajax({
+		 			url: 'http://localhost:3001/',
+		 			dataType:'text',
+		 			success:function(r){
+		 				console.log('success');
+		 				console.log(r);
+		 				doPoll(cb);
+		 			},
+		 			error:function(er, errText){
+		 				console.log(errText);
+		 				console.log('error');
+		 				console.log(er);
+		 			}
+		 		});		 		
+		 	};
+
+		 	var alertResponse = function(response){
+		 		console.log('Recieved Response');
+		 		doPoll(cb);
+		 	}
+		 	
+		 	doPoll(cb);
+		 });
+		</script>
+	</body>
+</html>
