@@ -25,19 +25,21 @@ class LP
 	AysncResponse = [-1, {}, []].freeze
 
 	
-	def call(env)
-		puts env['']
+	def call(env)		
 		body = DPoll.new
 		
 		EM.next_tick {
 			env['async.callback'].call([200, {'Content-Type' => 'application/json', 'Access-Control-Allow-Origin' => "*"}, body])			
 		}
 
-		random_number = rand(20)
-		puts "Random number #{random_number}"
-		
-		t = EM.add_timer(random_number) do			
-			body.append_body(['Hello...'], self)
+		EM.next_tick do
+			random_number = rand(20)
+			puts "Random number #{random_number}"			
+			puts " = activating one shot timer ="
+			t = EM.add_timer(random_number) do	
+			    puts "-- One shot fired --"		
+				body.append_body(['Hello...'], self)			
+			end
 		end
 
 		EM.add_timer(10) do
